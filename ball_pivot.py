@@ -246,7 +246,9 @@ class BallPivot:
 
     def find_seed_triangle(self, radius):
         for i, p_idx in enumerate(self.possible_seed):
-            print(f"\r fs {i:5d} | {'#'*int(i/len(self.possible_seed)*50):50s} | {i/len(self.possible_seed)*100:5.2f}%", end="")
+            print(
+                f"\r fs {i:11d} | {'#' * int(i / len(self.possible_seed) * 50):50s} | {i / len(self.possible_seed) * 100:5.2f}%",
+                end="")
             if self.try_seed(self.vertices[p_idx], radius):
                 self.expand_triangulation(radius)
         self.possible_seed = set(i for i in range(len(self.vertices)) if self.vertices[i].type == VertexType.ORPHAN)
@@ -316,10 +318,9 @@ class BallPivot:
             if idx == src.idx or idx == target.idx or idx == opposite.idx:
                 continue
             if is_coplanar(src.point, target.point, opposite.point, candidate.point) and (
-                    segment_intersection(midpoint.point, candidate.point, src.point, opposite.point) or
-                    segment_intersection(midpoint.point, candidate.point, target.point, opposite.point)
+                    segment_intersection(midpoint, candidate.point, src.point, opposite.point) or
+                    segment_intersection(midpoint, candidate.point, target.point, opposite.point)
             ):
-                print("coplanar and intersecting")
                 continue
             new_center = get_center_of_ball(src, target, candidate, radius)
             if new_center is None:
@@ -350,7 +351,9 @@ class BallPivot:
         l = len(self.edge_front)
         while self.edge_front:
             l = max(l, len(self.edge_front))
-            print(f"\r ex {l-len(self.edge_front):5d} | {'#'*int((l-len(self.edge_front))/l*50):50s} | {(l-len(self.edge_front))/l*100:5.2f}%", end="")
+            print(
+                f"\r ex {l - len(self.edge_front):5d}/{l:<5d} | {'#' * int((l - len(self.edge_front)) / l * 50):50s} | {(l - len(self.edge_front)) / l * 100:5.2f}%",
+                end="")
             edge = self.edge_front.pop()
             if edge.type != EdgeType.FRONT:
                 continue
